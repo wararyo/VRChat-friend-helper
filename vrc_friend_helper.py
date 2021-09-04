@@ -9,6 +9,8 @@ import csv
 import subprocess
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+from pythonosc import udp_client
+from pythonosc.osc_message_builder import OscMessageBuilder
 
 # 初回のフレンドリストはChromeでVRChatを開いてREPLで下記を実行すると取得できます
 # let friendsHTML = [...document.querySelectorAll(".friend-container .user-info h6 a")].map(x => x.innerText).join(", <br>")
@@ -22,18 +24,43 @@ LOG_EXTENSION = "txt"
 FRIENDS_FILE_NAME = "friends.csv"
 FRIENDS_CSV_HEADER = ["UserName", "Description"]
 
-friends = []
+OSC_IP = '127.0.0.1'
+OSC_PORT = 39972
 
+friends = []
+display = None
+
+# listから条件を満たす項目を探す
 def find(func, arr):
     rs = list(filter(func, arr))
     if len(rs) == 0: return None
     return rs[0]
 
-class MyHandler(PatternMatchingEventHandler):
+class VaNiiMenuDisplay:
+    osc_client = None
+    osc_contents = []
+
+    def __init__(self, ip, port):
+        self.osc_client = udp_client.UDPClient(ip, port)
+
+    def addContent(self, text):
+        self.osc_contents.append(text)
+
+    def clearContent(self):
+        self.osc_contents.clear()
+
+    def update(self):
+        msg = OscMessageBuilder(address='/VaNiiMenu/HomeInfo')
+        msg.add_arg("\n".join(self.osc_contents))
+        m = msg.build()
+
+        self.osc_client.send(m)
+
+class LogEventHandler(PatternMatchingEventHandler):
     log_file = None
     log_file_name = ""
     def __init__(self, patterns):
-        super(MyHandler, self).__init__(patterns=patterns)
+        super(LogEventHandler, self).__init__(patterns=patterns)
 
     def on_modified(self, event):
         file_name = os.path.basename(event.src_path)
@@ -54,14 +81,18 @@ class MyHandler(PatternMatchingEventHandler):
             match=re.search('([0-9\.]+ [0-9:]+).+Joining or Creating Room: (.+)',line)
             if match != None:
                 print("\n" + match.group(1) + " World: " + match.group(2))
+                display.clearContent()
+                # 念のためフレンド一覧を再読み込み
+                load_friends()
 
-            # プレイヤーのロード
+            # プレイヤーの参加
             match=re.search('([0-9\.]+ [0-9:]+).+\[Behaviour\] Initialized PlayerAPI "(.+)" is remote',line)
             if match != None:
                 user_name = match.group(2)
                 friend = find(lambda x: x["UserName"] == user_name, friends)
                 if friend != None:
                     print(match.group(1),"User:",user_name,",",friend["Description"])
+                    display.addContent(user_name + ": " + friend["Description"])
 
             # プレイヤーの退出
             # match=re.search('([0-9\.]+ [0-9:]+).+\[Behaviour\] OnPlayerLeft "(.+)"',line)
@@ -76,17 +107,18 @@ class MyHandler(PatternMatchingEventHandler):
                 if find(lambda x: x["UserName"] == user_name, friends) == None:
                     with open(FRIENDS_FILE_NAME, 'a', encoding="utf-8") as f:
                         print(user_name+",", file=f)
-                    # 念のためフレンド一覧を再読み込み
-                    load_friends()
 
             line = self.log_file.readline()
+        
+        # VaNiiMenuを更新
+        display.update()
 
     def on_stop(self):
         if self.log_file != None:
             self.log_file.close()
 
 def watch():
-    event_handler = MyHandler([LOG_PREFIX+"*"+LOG_EXTENSION])
+    event_handler = LogEventHandler([LOG_PREFIX+"*"+LOG_EXTENSION])
     observer = Observer()
     observer.schedule(event_handler, LOG_DIRECTORY, recursive=False)
     observer.start()
@@ -110,6 +142,7 @@ def load_friends():
     print("{} friends has been loaded.".format(len(friends)))
 
 if __name__ == "__main__":
+    display = VaNiiMenuDisplay(OSC_IP, OSC_PORT)
     # フレンド一覧をCSVファイルから読み込み
     load_friends()
     # ログファイルの監視を開始
