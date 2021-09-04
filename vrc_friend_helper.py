@@ -16,8 +16,7 @@ from pythonosc.osc_message_builder import OscMessageBuilder
 # let friendsHTML = [...document.querySelectorAll(".friend-container .user-info h6 a")].map(x => x.innerText).join(", <br>")
 # document.write(friendsHTML)
 
-# [User]の部分をユーザー名に書き換えてください
-LOG_DIRECTORY = "C:/Users/wararyo/AppData/LocalLow/VRChat/VRChat/"
+LOG_DIRECTORY = os.path.expandvars(r"%appdata%/../LocalLow/VRChat/VRChat/")
 LOG_PREFIX = "output_log_"
 LOG_EXTENSION = "txt"
 
