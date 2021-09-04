@@ -93,7 +93,10 @@ def watch():
     print("Watching logs in {}".format(LOG_DIRECTORY))
     try:
         while True:
-            time.sleep(1)
+            time.sleep(5)
+            # Watchdogだけだとなぜか変更が検知されないため、定期的にログファイルを開く
+            if event_handler.log_file_name != "":
+                open(os.path.join(LOG_DIRECTORY,event_handler.log_file_name), 'r', encoding="utf-8").close()
     except KeyboardInterrupt:
         event_handler.on_stop()
         observer.stop()
