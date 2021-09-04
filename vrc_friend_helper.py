@@ -5,14 +5,29 @@ import sys
 import os
 import time
 import re
+import csv
 import subprocess
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+
+# 初回のフレンドリストはChromeでVRChatを開いてREPLで下記を実行すると取得できます
+# let friendsHTML = [...document.querySelectorAll(".friend-container .user-info h6 a")].map(x => x.innerText).join(", <br>")
+# document.write(friendsHTML)
 
 # [User]の部分をユーザー名に書き換えてください
 LOG_DIRECTORY = "C:/Users/wararyo/AppData/LocalLow/VRChat/VRChat/"
 LOG_PREFIX = "output_log_"
 LOG_EXTENSION = "txt"
+
+FRIENDS_FILE_NAME = "friends.csv"
+FRIENDS_CSV_HEADER = ["UserName", "Description"]
+
+friends = []
+
+def find(func, arr):
+    rs = list(filter(func, arr))
+    if len(rs) == 0: return None
+    return rs[0]
 
 class MyHandler(PatternMatchingEventHandler):
     log_file = None
@@ -35,12 +50,19 @@ class MyHandler(PatternMatchingEventHandler):
         line = self.log_file.readline()
         while line:
 
+            # 部屋の移動
             match=re.search('([0-9\.]+ [0-9:]+).+Joining or Creating Room: (.+)',line)
             if match != None:
                 print(match.group(1) + " World: " + match.group(2))
+
+            # プレイヤーのロード
             match=re.search('([0-9\.]+ [0-9:]+).+\[Behaviour\] Initialized PlayerAPI "(.+)" is remote',line)
             if match != None:
-                print(match.group(1) + "  User: " + match.group(2))
+                user_name = match.group(2)
+                friend = find(lambda x: x["UserName"] == user_name, friends)
+                if friend != None:
+                    print(match.group(1),"User:",user_name,",",friend["Description"])
+
             line = self.log_file.readline()
 
     def on_stop(self):
@@ -62,4 +84,10 @@ def watch():
 
 
 if __name__ == "__main__":
+    # フレンドリストをCSVファイルから読み込み
+    with open(FRIENDS_FILE_NAME, 'r',encoding="utf-8") as f:
+        reader = csv.DictReader(filter(lambda row: row[0]!='#', f), FRIENDS_CSV_HEADER)
+        friends = [row for row in reader]
+    print("{} friends has been loaded.".format(len(friends)))
+    # ログファイルの監視を開始
     watch()
