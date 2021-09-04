@@ -8,8 +8,7 @@ from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 
 # [User]の部分をユーザー名に書き換えてください
-# LOG_DIRECTORY = "C:\Users\[User]\AppData\LocalLow\VRChat\VRChat\" # WindowsのPythonで実行する場合
-LOG_DIRECTORY = "/mnt/c/Users/wararyo/AppData/LocalLow/VRChat/VRChat" # WSL2のPythonで実行する場合
+LOG_DIRECTORY = "C:/Users/wararyo/AppData/LocalLow/VRChat/VRChat/"
 LOG_PREFIX = "output_log_"
 LOG_EXTENSION = "txt"
 
@@ -31,7 +30,7 @@ class MyHandler(PatternMatchingEventHandler):
 
 
 def watch():
-    event_handler = MyHandler(["*"])
+    event_handler = MyHandler([LOG_PREFIX+"*"+LOG_EXTENSION])
     observer = Observer()
     observer.schedule(event_handler, LOG_DIRECTORY, recursive=True)
     observer.start()
