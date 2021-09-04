@@ -53,7 +53,7 @@ class MyHandler(PatternMatchingEventHandler):
             # 部屋の移動
             match=re.search('([0-9\.]+ [0-9:]+).+Joining or Creating Room: (.+)',line)
             if match != None:
-                print(match.group(1) + " World: " + match.group(2))
+                print("\n" + match.group(1) + " World: " + match.group(2))
 
             # プレイヤーのロード
             match=re.search('([0-9\.]+ [0-9:]+).+\[Behaviour\] Initialized PlayerAPI "(.+)" is remote',line)
@@ -62,6 +62,22 @@ class MyHandler(PatternMatchingEventHandler):
                 friend = find(lambda x: x["UserName"] == user_name, friends)
                 if friend != None:
                     print(match.group(1),"User:",user_name,",",friend["Description"])
+
+            # プレイヤーの退出
+            # match=re.search('([0-9\.]+ [0-9:]+).+\[Behaviour\] OnPlayerLeft "(.+)"',line)
+                # if match != None:
+
+            # フレンド申請の承認
+            match=re.search('([0-9\.]+ [0-9:]+).+AcceptNotification for notification:.+ username:([^,]+),.*type: friendRequest.*',line)
+            if match != None:
+                user_name = match.group(2)
+                print(match.group(1),"FriendRequest Accepted:",user_name)
+                # 新たなフレンドをフレンド一覧に追加
+                if find(lambda x: x["UserName"] == user_name, friends) == None:
+                    with open(FRIENDS_FILE_NAME, 'a', encoding="utf-8") as f:
+                        print(user_name+",", file=f)
+                    # 念のためフレンド一覧を再読み込み
+                    load_friends()
 
             line = self.log_file.readline()
 
@@ -74,6 +90,7 @@ def watch():
     observer = Observer()
     observer.schedule(event_handler, LOG_DIRECTORY, recursive=False)
     observer.start()
+    print("Watching logs in {}".format(LOG_DIRECTORY))
     try:
         while True:
             time.sleep(1)
@@ -82,12 +99,15 @@ def watch():
         observer.stop()
     observer.join()
 
-
-if __name__ == "__main__":
-    # フレンドリストをCSVファイルから読み込み
-    with open(FRIENDS_FILE_NAME, 'r',encoding="utf-8") as f:
+def load_friends():
+    global friends
+    with open(FRIENDS_FILE_NAME, 'r', encoding="utf-8") as f:
         reader = csv.DictReader(filter(lambda row: row[0]!='#', f), FRIENDS_CSV_HEADER)
         friends = [row for row in reader]
     print("{} friends has been loaded.".format(len(friends)))
+
+if __name__ == "__main__":
+    # フレンド一覧をCSVファイルから読み込み
+    load_friends()
     # ログファイルの監視を開始
     watch()
