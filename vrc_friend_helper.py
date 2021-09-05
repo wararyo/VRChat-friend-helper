@@ -61,13 +61,24 @@ class LogEventHandler(PatternMatchingEventHandler):
     def __init__(self, patterns):
         super(LogEventHandler, self).__init__(patterns=patterns)
 
+    def on_created(self, event):
+        file_name = os.path.basename(event.src_path)
+
+        # 新たなログファイルを検知したときはそのログファイルを開く
+        if file_name != self.log_file_name:
+            self.log_file_name = file_name
+            print("New log file created:",self.log_file_name)
+            if self.log_file != None:
+                self.log_file.close()
+            self.log_file = open(event.src_path, 'r', encoding="utf-8")
+
     def on_modified(self, event):
         file_name = os.path.basename(event.src_path)
 
         # 新たなログファイルを検知したときはそのログファイルを開く
         if file_name != self.log_file_name:
             self.log_file_name = file_name
-            print("New log file detected:",self.log_file_name)
+            print("New log file modified:",self.log_file_name)
             if self.log_file != None:
                 self.log_file.close()
             self.log_file = open(event.src_path, 'r', encoding="utf-8")
