@@ -49,6 +49,13 @@ class VaNiiMenuDisplay:
     def clearContent(self):
         self.osc_contents.clear()
 
+    def removeContent(self, text):
+        try:
+            self.osc_contents.remove(text)
+            return True
+        except ValueError as error:
+            return False
+
     def update(self):
         msg = OscMessageBuilder(address='/VaNiiMenu/HomeInfo')
         msg.add_arg("\n".join(self.osc_contents))
@@ -107,8 +114,12 @@ class LogEventHandler(PatternMatchingEventHandler):
                     display.addContent(user_name + ": " + friend["Description"])
 
             # プレイヤーの退出
-            # match=re.search('([0-9\.]+ [0-9:]+).+\[Behaviour\] OnPlayerLeft "(.+)"',line)
-                # if match != None:
+            match=re.search('([0-9\.]+ [0-9:]+).+\[Behaviour\] OnPlayerLeft (.+)',line)
+            if match != None:
+                user_name = match.group(2)
+                friend = find(lambda x: x["UserName"] == user_name, friends)
+                if friend != None:
+                    display.removeContent(user_name + ": " + friend["Description"])
 
             # フレンド申請の承認
             match=re.search('([0-9\.]+ [0-9:]+).+AcceptNotification for notification:.+ username:([^,]+),.*type: friendRequest.*',line)
