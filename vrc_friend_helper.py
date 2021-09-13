@@ -7,6 +7,7 @@ import time
 import re
 import csv
 import subprocess
+import datetime
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 from pythonosc import udp_client
@@ -55,6 +56,7 @@ class VaNiiMenuDisplay:
 
         self.osc_client.send(m)
 
+# VRChatが出すログを監視する
 class LogEventHandler(PatternMatchingEventHandler):
     log_file = None
     log_file_name = ""
@@ -127,6 +129,23 @@ class LogEventHandler(PatternMatchingEventHandler):
         if self.log_file != None:
             self.log_file.close()
 
+# ファイルとコンソール両方に出力するロガー
+class Logger(object):
+    def __init__(self):
+        self.terminal = sys.stdout
+        now = datetime.datetime.now()
+        self.log = open(now.strftime("%Y-%m-%d_%H-%M-%S.log"), "a", encoding="utf-8")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+    def flush(self):
+        pass
+
+    def close(self):
+        self.log.close()
+
 def watch():
     event_handler = LogEventHandler([LOG_PREFIX+"*"+LOG_EXTENSION])
     observer = Observer()
@@ -152,8 +171,10 @@ def load_friends():
     print("{} friends has been loaded.".format(len(friends)))
 
 if __name__ == "__main__":
+    sys.stdout = Logger()
     display = VaNiiMenuDisplay(OSC_IP, OSC_PORT)
     # フレンド一覧をCSVファイルから読み込み
     load_friends()
     # ログファイルの監視を開始
     watch()
+    sys.stdout.close()
