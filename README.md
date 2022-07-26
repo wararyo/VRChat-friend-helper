@@ -20,7 +20,7 @@ CSV形式ですが、`#`から始まる行はコメントとして扱われま�
 TODO: ブックマークレットにした方が楽そう
 
 ``` javascript
-let friendsHTML = [...document.querySelectorAll(".friend-container .user-info h6 a")].map(x => x.innerText).join(", <br>")
+let friendsHTML = [...document.querySelectorAll("a.css-1u1s9ta")].map(x => x.innerText).join(", <br>")
 document.write(friendsHTML)
 ```
 
