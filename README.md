@@ -16,8 +16,15 @@
 UTF-8で保存してください。  
 CSV形式ですが、`#`から始まる行はコメントとして扱われます。
 
-初回の作成はChromeでVRChatを開いてREPLで下記を実行すると楽です。  
-TODO: ブックマークレットにした方が楽そう
+初回の作成はブラウザでVRChatを開いて下記をURL欄に入力すると楽です。
+(Chromeだと先頭の`javascript:`が自動的に消去されてしまうみたいなので、`javascript:`を手入力した後にペーストするとよいです)
+
+```
+javascript:let%20friendsHTML%20%3D%20%5B...document.querySelectorAll%28%22a.css-1u1s9ta%22%29%5D.map%28x%20%3D%3E%20x.innerText%29.join%28%22%2C%20%3Cbr%3E%22%29%3Bdocument.write%28friendsHTML%29
+```
+
+
+またはREPLで下記を実行します。  
 
 ``` javascript
 let friendsHTML = [...document.querySelectorAll("a.css-1u1s9ta")].map(x => x.innerText).join(", <br>")
@@ -91,6 +98,4 @@ pyinstaller .\vrc_friend_helper.py --onefile
 ```
 
 ## TODO
-
-* フレンドが退出したらVaNiiMenuから消す
-* ブックマークレットにする
+XSOverlay対応、またはC#で書き直してOpenVRオーバーレイ対応
