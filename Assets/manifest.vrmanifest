@@ -1,0 +1,17 @@
+{
+	"source" : "builtin",
+	"applications": [
+		{
+			"app_key": "wararyo.vrc-friend-helper",
+			"launch_type": "binary",
+			"binary_path_windows": "VRC Friend Helper.exe",
+			"is_dashboard_overlay": true,
+			"strings": {
+				"en_us": {
+					"name": "VRC Friend Helper",
+					"description": "Displays notes about friends who are in the same instance."
+				}
+			}
+		}
+	]
+}

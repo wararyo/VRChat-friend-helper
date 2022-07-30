@@ -1,0 +1,1 @@
+start "VRC Friend Helper" "VRC Friend Helper.exe" --uninstall
