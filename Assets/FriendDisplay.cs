@@ -25,7 +25,7 @@ public class FriendDisplay : MonoBehaviour
 
     public void OnWorldLoaded(string worldName)
     {
-        Debug.Log("World: " + worldName);
+        Debug.Log("\n" + "World: " + worldName);
         currentWorldName = worldName;
         friendsInInstance.Clear();
         Refresh();
@@ -33,10 +33,18 @@ public class FriendDisplay : MonoBehaviour
     public void OnUserJoined(string userName)
     {
         Friend f = friends.Find(x => x.name == userName );
-        if (f == null) return;
-        friendsInInstance.Add(f);
-        Debug.Log(f.name + ": " + f.description);
-        Refresh();
+
+        if (f == null)
+        {
+            Debug.Log(userName);
+        }
+        else
+        {
+            friendsInInstance.Add(f);
+            Debug.Log(f.name + ": " + f.description);
+            Refresh();
+        }
+
     }
     public void OnUserLeft(string username)
     {

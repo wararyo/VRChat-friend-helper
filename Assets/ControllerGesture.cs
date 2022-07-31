@@ -51,6 +51,8 @@ public class ControllerGesture : MonoBehaviour
 
     void Update()
     {
+        if (overlay.openvr == null) return;
+
         uint leftHandId = overlay.openvr.GetTrackedDeviceIndexForControllerRole(Valve.VR.ETrackedControllerRole.LeftHand);
         uint rightHandId = overlay.openvr.GetTrackedDeviceIndexForControllerRole(Valve.VR.ETrackedControllerRole.RightHand);
 
