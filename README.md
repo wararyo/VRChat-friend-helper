@@ -39,7 +39,7 @@ document.write(friendsHTML)
 
 ### SteamVRに登録
 
-SteamVRを装着した後に`VRC Friend Helper.exe`を起動します。  
+HMDを装着しSteamVRを起動した後に`VRC Friend Helper.exe`を起動します。  
 自動的にVRC Friend HelperがスタートアップオーバーレイアプリとしてSteamVRに登録されます。  
 これは、SteamVR設定の `スタートアップ／シャットダウン > スタートアップオーバーレイアプリを選択` から確認できます。
 

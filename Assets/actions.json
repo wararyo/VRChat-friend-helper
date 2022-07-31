@@ -22,12 +22,12 @@
     {
       "language_tag": "en_us",
       "/actions/main": "Overlay",
-      "/actions/main/in/OpenInventory": "Show Overlay"
+      "/actions/main/in/ShowOverlay": "Show Overlay"
     },
     {
       "language_tag": "ja",
       "/actions/main": "オーバーレイ",
-      "/actions/main/in/OpenInventory": "オーバーレイを表示"
+      "/actions/main/in/ShowOverlay": "オーバーレイを表示"
     }
   ]
 }
