@@ -4,7 +4,11 @@
 
 これを起動しながらVRChatに入ると、フレンドが同じインスタンスに居るとき、  
 そのフレンドにあらかじめ付けたメモを  
-コマンドプロンプト、またはVaNiiMenuで確認することができます。
+デスクトップ、またはVR内で確認することができます。
+
+## 前提
+
+WindowsとSteamVRを使用しているものとします。
 
 ## 導入方法
 
@@ -12,7 +16,9 @@
 
 ### 必要なファイルの準備
 
-ダウンロードしたzipファイルの中にある`friends.csv`を開き、例にならってフレンドの表示名を一人一行で記述します。
+ダウンロードしたzipファイルを展開し、お好みのフォルダに移動します。
+
+`friends.csv`を開き、例にならってフレンドの表示名を一人一行で記述します。
 UTF-8で保存してください。  
 CSV形式ですが、`#`から始まる行はコメントとして扱われます。
 
@@ -31,71 +37,51 @@ let friendsHTML = [...document.querySelectorAll("a.css-1u1s9ta")].map(x => x.inn
 document.write(friendsHTML)
 ```
 
-### VaNiiMenuの設定
+### SteamVRに登録
 
-VaNiiMenuを使用する場合は、VaNiiMenuの`config/Communication.json` を開き、下記のように書き換えます。
+HMDを装着しSteamVRを起動した後に`VRC Friend Helper.exe`を起動します。  
+自動的にVRC Friend HelperがスタートアップオーバーレイアプリとしてSteamVRに登録されます。  
+これは、SteamVR設定の `スタートアップ／シャットダウン > スタートアップオーバーレイアプリを選択` から確認できます。
 
-``` json
-{"OSCReceive":true,"jsonVer":1}
-```
-
-### VRChatとVaNiiMenuとVRChat-friend-helperを同時に起動する
-
-適切にファイルを配置することで、
-VRChatとVaNiiMenuとVRChat-friend-helperを同時に起動できます。
-
-まず `VRC_friend_helper`フォルダをVaNiiMenu.exeがあるフォルダに移動します。
-
-`VaNiiMenuAndFriendHelper.bat`をVRC_friend_helperフォルダから、VaNiiMenu.exeがあるフォルダに移動します。
-
-```
-VaNiiMenu
-┣ VRC_friend_helper
-┃┣ vrc_friend_helper.exe
-┃┗ friends.csv
-┣ VaNiiMenu.exe
-┗ VaNiiMenuAndFriendHelper.bat
-```
-
-移動した`VaNiiMenuAndFriendHelper.bat`を開き、一行目をお使いのPCに合わせて書き換えます。
-VRChatをインストールしたフォルダを指定します。
-
-最後にVaNiiMenuAndFriendHelper.batをお好みの方法で起動します。  
-(デスクトップにショートカットを作成する、スタートメニューに追加するなど)
+![SteamVR設定](/Images/StartUp.jpg)
 
 ## 使い方
 
-VRChat-friend-helperは、VRChatを起動するとログファイルを自動的に検出します。
+### VR
+VRでは、SteamVRと同時にVRC Friend Helperが起動します。
 
-VaNiiMenuを使用しない場合は、
-`vrc_friend_helper.exe`を起動した後にVRChatを起動します。
+右のOculus Touchコントローラーのグリップボタンを押しながら左右のコントローラーを近づけると、目の前にフレンド一覧が表示されます。  
+(Oculus Touchコントローラー以外を用いている方は後述の[カスタマイズ](#カスタマイズ)からボタンを設定してください)
 
-VaNiiMenuを使用する場合は、先述の`VaNiiMenuAndFriendHelper.bat`を実行するか、  
-`vrc_friend_helper.exe`, VRChat, VaNiiMenu の順で起動します。
+### デスクトップ
+デスクトップのみで使うには、`VRC Friend Helper Desktop Mode.bat`を起動した後にVRChatを起動してください。
 
-VaNiiMenuでは、ホーム画面の `- FROM EXTERNAL APPLICATION -` からメモが確認できます。
+## カスタマイズ
 
-## 開発とビルド
+VRにおいて、フレンド一覧を表示するためのボタンを変更できます。
 
-### Pythonと依存パッケージのインストール
+SteamVR設定の古いバインド設定UIを表示します。
 
-Pythonとpipをインストールします。(WSL2ではなくWindowsにインストールしてください)
+![古いバインド設定UIを表示](Images/Binding1.jpg)
 
-下記を実行して必要なパッケージをインストールします。
+`VRC Friend Helper` を選択します。
 
-```
-pip install watchdog
-pip install python_osc
-pip install pyinstaller
-```
+![VRC Friend Helper](Images/Binding2.jpg)
 
-### ビルド
+バインドを編集します。
 
-下記を実行すると、distフォルダの中に実行ファイルが格納されます。
+![編集](Images/Binding3.jpg)
 
-```
-pyinstaller .\vrc_friend_helper.py --onefile
-```
+デフォルトで設定されている右グリップのバインドを削除します。
 
-## TODO
-XSOverlay対応、またはC#で書き直してOpenVRオーバーレイ対応
+![バインドを変更](Images/Binding4.jpg)
+
+お好みのボタンに `showoverlay` を割り当てます。
+下記は右スティック押し込みで交互に表示/非表示が切り替わるようにした設定例です。
+
+![バインドを変更](Images/Binding5.jpg)
+
+## アンインストール
+
+SteamVRを起動した状態で、`Uninstall.bat`を実行します。
+スタートアップオーバーレイアプリにVRC Friend Helperが表示されていなければ成功です。

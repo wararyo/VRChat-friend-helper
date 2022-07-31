@@ -1,0 +1,33 @@
+{
+  "default_bindings": [
+    {
+      "controller_type": "oculus_touch",
+      "binding_url": "vrc_friend_helper_oculus.json"
+    }
+  ],
+  "actions": [
+    {
+      "name": "/actions/main/in/ShowOverlay",
+      "requirement": "suggested",
+      "type": "boolean"
+    }
+  ],
+  "action_sets": [
+    {
+      "name": "/actions/main",
+      "usage": "leftright"
+    }
+  ],
+  "localization": [
+    {
+      "language_tag": "en_us",
+      "/actions/main": "Overlay",
+      "/actions/main/in/ShowOverlay": "Show Overlay"
+    },
+    {
+      "language_tag": "ja",
+      "/actions/main": "オーバーレイ",
+      "/actions/main/in/ShowOverlay": "オーバーレイを表示"
+    }
+  ]
+}
