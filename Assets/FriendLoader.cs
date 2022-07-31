@@ -10,6 +10,17 @@ using UnityEngine;
 public class FriendLoader : MonoBehaviour
 {
     public List<Friend> friends { get; } = new List<Friend>();
+    public string friendsFilePath
+    {
+        get
+        {
+#if UNITY_EDITOR
+            return "Assets/friends.csv";
+#elif UNITY_STANDALONE_WIN
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\'), "friends.csv");
+#endif
+        }
+    }
 
     void Start()
     {
@@ -18,11 +29,6 @@ public class FriendLoader : MonoBehaviour
 
     void LoadFriends()
     {
-#if UNITY_EDITOR
-        string friendsFilePath = "Assets/friends.csv";
-#elif UNITY_STANDALONE_WIN
-        string friendsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\'), "friends.csv");
-#endif
         Debug.Log("Loading friends at " + friendsFilePath);
 
         try
@@ -45,5 +51,21 @@ public class FriendLoader : MonoBehaviour
         }
 
         Debug.Log(friends.Count + " friends has been loaded.");
+    }
+
+    public void AppendFriend(string userName)
+    {
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(friendsFilePath, true))
+            {
+                writer.WriteLine(userName + ",");
+            }
+            Debug.Log(userName + " successfully added to friends.");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Loading log failed: " + ex.Message);
+        }
     }
 }
