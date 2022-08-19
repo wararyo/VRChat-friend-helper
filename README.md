@@ -1,5 +1,7 @@
 # VRChat Friend Helper
 
+[![Donate: BOOTH](Images/Donate.svg)](https://wararyo.booth.pm/items/4095702)
+
 「このフレンド、何の人だっけ…？」を防げるツールです。
 
 これを起動しながらVRChatに入ると、フレンドが同じインスタンスに居るとき、  
@@ -15,7 +17,8 @@ WindowsとSteamVRを使用しているものとします。
 
 ## 導入方法
 
-[Releases](https://github.com/wararyo/VRChat-friend-helper/releases)より最新バージョンをダウンロードします。
+[Releases](https://github.com/wararyo/VRChat-friend-helper/releases)より最新バージョンをダウンロードします。  
+(BOOTHでダウンロードされた方はそれをそのまま用いて構いません)
 
 ### 必要なファイルの準備
 
