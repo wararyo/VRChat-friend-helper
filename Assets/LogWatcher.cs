@@ -35,7 +35,7 @@ public class LogWatcher : MonoBehaviour
 
     // ファイル変更イベント内でUnity関連の処理を実行すると動作が停止してしまう
     // Updateのタイミングでイベントを発行する
-    private Queue<KeyValuePair<StringEvent,string>> eventQueue = new Queue<KeyValuePair<StringEvent, string>>();
+    private Queue<KeyValuePair<StringEvent, string>> eventQueue = new Queue<KeyValuePair<StringEvent, string>>();
     public void Enqueue(StringEvent e, string arg) { eventQueue.Enqueue(new KeyValuePair<StringEvent, string>(e, arg)); }
 
     void Start()
@@ -49,10 +49,12 @@ public class LogWatcher : MonoBehaviour
 
         // ファイル監視の初期化
         string directory = Path.GetFullPath(Environment.ExpandEnvironmentVariables(LOG_DIRECTORY));
-        watcher = new FileSystemWatcher(directory, LOG_FILTER);
-        watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Attributes | NotifyFilters.FileName;
-        watcher.IncludeSubdirectories = false;
-        watcher.EnableRaisingEvents = true;
+        watcher = new FileSystemWatcher(directory, LOG_FILTER)
+        {
+            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Attributes | NotifyFilters.FileName,
+            IncludeSubdirectories = false,
+            EnableRaisingEvents = true
+        };
 
         watcher.Changed += new FileSystemEventHandler(OnFileChanged);
         watcher.Created += new FileSystemEventHandler(OnFileChanged);
@@ -88,7 +90,7 @@ public class LogWatcher : MonoBehaviour
             Match match = worldLoadedRegex.Match(line);
             Enqueue(onWorldLoaded, match.Groups[2].ToString());
         }
-        else if(userJoinedRegex.IsMatch(line)) // ユーザー参加
+        else if (userJoinedRegex.IsMatch(line)) // ユーザー参加
         {
             Match match = userJoinedRegex.Match(line);
             Enqueue(onUserJoined, match.Groups[2].ToString());
