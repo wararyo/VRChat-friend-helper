@@ -762,6 +762,7 @@ GameObject:
   - component: {fileID: 1272201627}
   - component: {fileID: 1272201626}
   - component: {fileID: 1272201625}
+  - component: {fileID: 1272201629}
   m_Layer: 5
   m_Name: VRCanvas
   m_TagString: Untagged
@@ -850,6 +851,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1272201629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272201624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce70e6baed82dae48906b33fe4cf640f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasType: 0
+  renderTexture: {fileID: 8400000, guid: ff0dc12153cd09547a36df6a66091bb2, type: 2}
+  openVr: {fileID: 1317019407}
+  canvasCamera: {fileID: 963194227}
+  text: {fileID: 325771755}
 --- !u!1 &1317019406
 GameObject:
   m_ObjectHideFlags: 0
@@ -1091,6 +1109,7 @@ GameObject:
   - component: {fileID: 1370345506}
   - component: {fileID: 1370345508}
   - component: {fileID: 1370345509}
+  - component: {fileID: 1370345510}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1219,6 +1238,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OpenVrManager: {fileID: 1317019406}
   autoLaunch: {fileID: 1317019409}
+--- !u!114 &1370345510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370345504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 127f15f484b46a048b339f1c3aedf682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onSettingsLoaded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1272201629}
+        m_MethodName: onSettingsLoaded
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1384430780
 GameObject:
   m_ObjectHideFlags: 0
