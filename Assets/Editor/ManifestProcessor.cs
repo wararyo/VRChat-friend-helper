@@ -19,6 +19,8 @@ public class ManifestProcessor : IPreprocessBuildWithReport, IPostprocessBuildWi
     {
         File.Copy("Assets/manifest.vrmanifest", Path.Combine(Path.GetDirectoryName(report.summary.outputPath), "manifest.vrmanifest"), true);
         File.Copy("Assets/actions.json", Path.Combine(Path.GetDirectoryName(report.summary.outputPath), "actions.json"), true);
+        File.Copy("Assets/vrc_friend_helper_oculus.json", Path.Combine(Path.GetDirectoryName(report.summary.outputPath), "vrc_friend_helper_oculus.json"), true);
+        File.Copy("Assets/vrc_friend_helper_knuckles.json", Path.Combine(Path.GetDirectoryName(report.summary.outputPath), "vrc_friend_helper_knuckles.json"), true);
         File.Copy("Assets/friends.csv", Path.Combine(Path.GetDirectoryName(report.summary.outputPath), "friends.csv"), true);
         File.Copy("Assets/VRC Friend Helper Desktop Mode.bat", Path.Combine(Path.GetDirectoryName(report.summary.outputPath), "VRC Friend Helper Desktop Mode.bat"), true);
         File.Copy("Assets/Uninstall.bat", Path.Combine(Path.GetDirectoryName(report.summary.outputPath), "Uninstall.bat"), true);

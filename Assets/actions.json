@@ -3,6 +3,10 @@
     {
       "controller_type": "oculus_touch",
       "binding_url": "vrc_friend_helper_oculus.json"
+    },
+    {
+      "controller_type": "knuckles",
+      "binding_url": "vrc_friend_helper_knuckles.json"
     }
   ],
   "actions": [
