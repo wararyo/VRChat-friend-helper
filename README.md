@@ -34,7 +34,7 @@ CSV形式ですが、`#`から始まる行はコメントとして扱われま�
 2. ページ右部に表示されているフレンド一覧を、一番下までスクロールします。
 3. URL欄に `javascript:` と入力します。 (コロンまで間違えず入力してください)
 4. 下記をコピーし、URL欄に入力したjavascript:の後ろにペーストします。
-5. 白い背景に黒い文字でフレンドのユーザー名一覧が表示されるので、それをコピーし、friends.csvにペーストします。
+5. Enterキーを押すと白い背景に黒い文字でフレンドのユーザー名一覧が表示されるので、それをコピーし、friends.csvにペーストします。
 
 ```
 let%20friendsHTML%20%3D%20%5B...document.querySelectorAll%28%22a.css-1u1s9ta%22%29%5D.map%28x%20%3D%3E%20x.innerText%29.join%28%22%2C%20%3Cbr%3E%22%29%3Bdocument.write%28friendsHTML%29
