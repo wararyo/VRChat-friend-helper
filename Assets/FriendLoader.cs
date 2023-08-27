@@ -22,6 +22,8 @@ public class FriendLoader : MonoBehaviour
         }
     }
 
+    public string currentWorldName { get; private set; } = "";
+
     void Start()
     {
         LoadFriends();
@@ -53,13 +55,19 @@ public class FriendLoader : MonoBehaviour
         Debug.Log(friends.Count + " friends has been loaded.");
     }
 
+    public void OnWorldLoaded(string worldName)
+    {
+        currentWorldName = worldName;
+    }
+
     public void AppendFriend(string userName)
     {
+        string date = DateTime.Now.ToString("yyyyMMdd");
         try
         {
             using (StreamWriter writer = new StreamWriter(friendsFilePath, true))
             {
-                writer.WriteLine(userName + ",");
+                writer.WriteLine(userName + "," + date + " " + currentWorldName);
             }
             Debug.Log(userName + " successfully added to friends.");
         }
