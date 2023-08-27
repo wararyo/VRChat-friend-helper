@@ -19,6 +19,7 @@ public class LogWatcher : MonoBehaviour
     public StringEvent onUserLeft;
     public StringEvent onWorldLoaded;
     public StringEvent onFriendRequestAccepted;
+    public StringEvent onFriendRequestSent;
 
     // 今追跡しているログファイルと、そのリーダー
     private string currentLogFile = "";
@@ -29,7 +30,8 @@ public class LogWatcher : MonoBehaviour
     const string PATTERN_USER_JOINED = @"([0-9\.]+ [0-9:]+).+\[Behaviour\] Initialized PlayerAPI ""(.+)"" is remote";
     const string PATTERN_USER_LEFT = @"([0-9\.]+ [0-9:]+).+\[Behaviour\] OnPlayerLeft (.+)";
     const string PATTERN_FRIEND_REQUEST_ACCEPTED = @"([0-9\.]+ [0-9:]+).+AcceptNotification for notification:.+ username:([^,]+),.*type: friendRequest.*";
-    private Regex worldLoadedRegex, userJoinedRegex, userLeftRegex, friendRequestAcceptedRegex;
+    const string PATTERN_FRIEND_REQUEST_SENT = @"([0-9\.]+ [0-9:]+).+Send notification:.+ username:([^,]+),.*type:friendRequest,.+$";
+    private Regex worldLoadedRegex, userJoinedRegex, userLeftRegex, friendRequestAcceptedRegex, friendRequestSentRegex;
 
     // ファイル変更イベント内でUnity関連の処理を実行すると動作が停止してしまう
     // Updateのタイミングでイベントを発行する
@@ -43,6 +45,7 @@ public class LogWatcher : MonoBehaviour
         userJoinedRegex = new Regex(PATTERN_USER_JOINED, RegexOptions.Compiled);
         userLeftRegex = new Regex(PATTERN_USER_LEFT, RegexOptions.Compiled);
         friendRequestAcceptedRegex = new Regex(PATTERN_FRIEND_REQUEST_ACCEPTED, RegexOptions.Compiled);
+        friendRequestSentRegex = new Regex(PATTERN_FRIEND_REQUEST_SENT, RegexOptions.Compiled);
 
         // ファイル監視の初期化
         string directory = Path.GetFullPath(Environment.ExpandEnvironmentVariables(LOG_DIRECTORY));
@@ -99,6 +102,11 @@ public class LogWatcher : MonoBehaviour
         {
             Match match = friendRequestAcceptedRegex.Match(line);
             Enqueue(onFriendRequestAccepted, match.Groups[2].ToString());
+        }
+        else if (friendRequestSentRegex.IsMatch(line)) // フレンド申請を送信
+        {
+            Match match = friendRequestSentRegex.Match(line);
+            Enqueue(onFriendRequestSent, match.Groups[2].ToString());
         }
     }
 
